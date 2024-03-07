@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import IntVar, StringVar
 from commons.constants import window_width, window_height, cpadx
-import time
-from database.db_manager import check_pin, get_visitor_info, get_visitors, get_visitor, del_visitor
+from database.db_manager import check_pin, get_visitor_info, get_visitors, get_visitor, del_visitor, add_update_visitor
 
 pin_mask = '****'
 counter = 0
@@ -71,6 +70,23 @@ def on_element_clicked(event):
     cb_status_var.set(user.status)
 
 
+def visitor_edit(db_entry_first_name, db_entry_last_name, db_entry_pin, db_entry_status):
+    lbl_status_msg_var.set(add_update_visitor(db_entry_first_name, db_entry_last_name, db_entry_pin, db_entry_status))
+    lbox_names.delete(0, tk.END)
+    refresh_lbox()
+
+def visitor_delete(first_name):
+    lbl_status_msg_var.set(del_visitor(first_name))
+    lbox_names.delete(0, tk.END)
+    refresh_lbox()
+
+
+
+def refresh_lbox():
+    global visitors_names
+    visitors_names = get_visitors()
+    for name in visitors_names:
+        lbox_names.insert(tk.END, name)
 
 
 #region MAIN WINDOW
@@ -217,7 +233,7 @@ lbox_names = tk.Listbox(admin_panel, width=15)
 lbox_names.grid(row=1, column=0, padx=(10 , 10), sticky='W', rowspan=5)
 visitors_names = get_visitors()
 for name in visitors_names:
-    lbox_names.insert(tk.END, name)
+        lbox_names.insert(tk.END, name)
 lbox_names.bind('<ButtonRelease-1>', on_element_clicked)
 
 
@@ -260,7 +276,11 @@ cb_status = tk.Checkbutton(admin_panel, variable=cb_status_var)
 cb_status.grid(row=4, column=2)
 
 admin_button_save = tk.Button(admin_panel,
-                                text='Spremi')
+                                text='Spremi',
+                                command=lambda : visitor_edit(entry_first_name_var.get(),
+                                                            entry_last_name_var.get(),
+                                                            entry_pin_var.get(),
+                                                            cb_status_var.get()))
 admin_button_save.grid(row=5, column=1)
 
 admin_button_cancel = tk.Button(admin_panel,
@@ -270,7 +290,7 @@ admin_button_cancel.grid(row=5, column=2, sticky='W')
 
 admin_button_delete = tk.Button(admin_panel,
                                 text='Obriši',
-                                command=lambda : del_visitor(entry_first_name_var.get()))
+                                command=lambda : visitor_delete(entry_first_name_var.get()))
 admin_button_delete.grid(row=5, column=3, sticky='W')
 
 

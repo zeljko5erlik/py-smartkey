@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 
 
+
 engine = create_engine('sqlite:///database/visitors_sq.db')
 
 Base = declarative_base()
@@ -39,13 +40,42 @@ session = Session()
 #endregion
 
 
-def add_visitor(first_name_entry, last_name_entry, pin_entry, status_entry):
-    visitor_obj = Visitor(first_name=first_name_entry,
-                           last_name=last_name_entry,
-                           pin=pin_entry,
-                           status=status_entry)
-    session.add(visitor_obj)
-    session.commit()
+def add_update_visitor(db_entry_first_name, db_entry_last_name, db_entry_pin, db_entry_status):
+    
+    try:
+        existing_row = session.query(Visitor).filter_by(first_name=db_entry_first_name).first()
+        
+        return_msg = ''
+
+        if session.query(Visitor).filter_by(pin=db_entry_pin).first():
+             return 'Pin se već koristi.\nMolim unesite drugi pin!'
+
+        if existing_row:
+            existing_row.first_name = db_entry_first_name
+            existing_row.last_name = db_entry_last_name
+            existing_row.pin = db_entry_pin
+            existing_row.status = db_entry_status
+            return_msg = 'Uspjepšno ste ažurirali podatke!'
+        
+        else:
+            visitor_obj = Visitor(first_name=db_entry_first_name,
+                                last_name=db_entry_last_name,
+                                pin=db_entry_pin,
+                                status=db_entry_status)
+            session.add(visitor_obj)
+            return_msg = 'Uspjepšno ste dodali \novlastili posjetitelja!'
+
+        session.commit()
+        
+    except Exception as ex:
+        session.rollback()
+        return_msg = f'Došlo je do pogreške prilikom unosa!\n{ex}'
+    
+    finally:
+         session.close()
+
+    return return_msg
+
 
 
 def check_pin(entered_pin):
@@ -77,7 +107,7 @@ def get_visitors():
 def del_visitor(first_name):
 
     visitor_obj = session.query(Visitor).filter_by(first_name=first_name).first()
-    
+    return_msg = ''
     del_obj = visitor_obj.first_name
 
     try:
@@ -85,13 +115,15 @@ def del_visitor(first_name):
         if row_to_delete:
             session.delete(row_to_delete)
             session.commit()
-            print("Row deleted successfully.")
+            return_msg = 'Uspješno ste obrisali posjetitelja.'
         else:
-            print("Row not found.")
+            return_msg = 'Posjetitelj nije pronađen.'
     except Exception as e:
         session.rollback()
-        print(f"Error deleting row: {e}")
+        return_msg = 'Greška pri brisanju posjetitelja.'
     finally:
         session.close()
+    
+    return return_msg
       
 
