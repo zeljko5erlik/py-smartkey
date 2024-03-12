@@ -47,6 +47,9 @@ def add_update_visitor(db_entry_first_name, db_entry_last_name, db_entry_pin, db
         
         return_msg = ''
 
+        if len(db_entry_pin) > 4:
+             return 'Pin može imati samo četiri brojke.\nMolim unesite drugi pin!'             
+
         if session.query(Visitor).filter_by(pin=db_entry_pin).first():
              return 'Pin se već koristi.\nMolim unesite drugi pin!'
 

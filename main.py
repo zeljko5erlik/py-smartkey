@@ -1,11 +1,12 @@
 import tkinter as tk
 from tkinter import IntVar, StringVar
-from commons.constants import window_width, window_height, cpadx
+from commons.constants import window_width, cpadx
 from database.db_manager import check_pin, get_visitor_info, get_visitors, get_visitor, del_visitor, add_update_visitor
 
 pin_mask = '****'
 counter = 0
 entered_pin = ''
+
 
 def pin_entry(value):
     global counter, entered_pin
@@ -32,6 +33,12 @@ def pin_entry(value):
 
 def hide_panel(panel):
     panel.grid_remove()
+    if panel == admin_panel:
+        window_height.set(450)
+        main_window.geometry(f'{window_width}x{window_height.get()}')
+    else:
+        window_height.set(150)
+        main_window.geometry(f'{window_width}x{window_height.get()}')
     lbl_status_msg_var.set('Status i poruke')
     reset_parameters()
     
@@ -47,16 +54,21 @@ def reset_parameters():
 
 
 def show_panel(panel):
+    global window_height
     if panel == pin_panel:
+        window_height.set(450)
+        main_window.geometry(f'{window_width}x{window_height.get()}')
         lbl_welcome_msg_var.set('Dobro došli!')    
         panel.grid(row=1, column=0, padx=cpadx, pady=(10, 10))
     else:
+        window_height.set(720)
+        main_window.geometry(f'{window_width}x{window_height.get()}')
         admin_panel.grid(row=2, column=0, padx=cpadx, pady=(20, 20))
     
 
 def ring():
-    hide_panel(pin_panel)
     hide_panel(admin_panel)
+    hide_panel(pin_panel)
     lbl_welcome_msg_var.set('Pričekajte koji trenutak.')
 
 
@@ -92,7 +104,9 @@ def refresh_lbox():
 #region MAIN WINDOW
 main_window = tk.Tk()
 main_window.title('Smart key app')
-main_window.geometry(f'{window_width}x{window_height}')
+window_height = IntVar()
+window_height.set(150)
+main_window.geometry(f'{window_width}x{window_height.get()}')
 
 #endregion
 
@@ -306,35 +320,7 @@ main_window.mainloop()
 #endregion
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    #endregion
+#endregion
 
 
 
