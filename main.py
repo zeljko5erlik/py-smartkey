@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import IntVar, StringVar
-from commons.constants import window_width, cpadx
+from commons.constants import WINDOW_WIDTH, CPADX
 from database.db_manager import check_pin, get_visitor_info, get_visitors, get_visitor, del_visitor, add_update_visitor
 
 pin_mask = '****'
@@ -35,10 +35,10 @@ def hide_panel(panel):
     panel.grid_remove()
     if panel == admin_panel:
         window_height.set(450)
-        main_window.geometry(f'{window_width}x{window_height.get()}')
+        main_window.geometry(f'{WINDOW_WIDTH}x{window_height.get()}')
     else:
         window_height.set(150)
-        main_window.geometry(f'{window_width}x{window_height.get()}')
+        main_window.geometry(f'{WINDOW_WIDTH}x{window_height.get()}')
     lbl_status_msg_var.set('Status i poruke')
     reset_parameters()
     
@@ -57,13 +57,13 @@ def show_panel(panel):
     global window_height
     if panel == pin_panel:
         window_height.set(450)
-        main_window.geometry(f'{window_width}x{window_height.get()}')
+        main_window.geometry(f'{WINDOW_WIDTH}x{window_height.get()}')
         lbl_welcome_msg_var.set('Dobro došli!')    
-        panel.grid(row=1, column=0, padx=cpadx, pady=(10, 10))
+        panel.grid(row=1, column=0, padx=CPADX, pady=(10, 10))
     else:
         window_height.set(720)
-        main_window.geometry(f'{window_width}x{window_height.get()}')
-        admin_panel.grid(row=2, column=0, padx=cpadx, pady=(20, 20))
+        main_window.geometry(f'{WINDOW_WIDTH}x{window_height.get()}')
+        admin_panel.grid(row=2, column=0, padx=CPADX, pady=(20, 20))
     
 
 def ring():
@@ -106,17 +106,17 @@ main_window = tk.Tk()
 main_window.title('Smart key app')
 window_height = IntVar()
 window_height.set(150)
-main_window.geometry(f'{window_width}x{window_height.get()}')
+main_window.geometry(f'{WINDOW_WIDTH}x{window_height.get()}')
 
 #endregion
 
 #region FRAMES
 #region BUTTON PANEL
 button_panel = tk.Frame(main_window)
-button_panel.columnconfigure(0, minsize=window_width-(2 * cpadx))
+button_panel.columnconfigure(0, minsize=WINDOW_WIDTH-(2 * CPADX))
 lbl_welcome_msg_var = StringVar()
 lbl_welcome_msg_var.set('Dobro došli!')
-button_panel.grid(row=0, column=0, padx=cpadx, pady=(20, 10))
+button_panel.grid(row=0, column=0, padx=CPADX, pady=(20, 10))
 
 lbl_welcome_msg = tk.Label(button_panel,
                             textvariable=lbl_welcome_msg_var)
@@ -135,8 +135,8 @@ unlock_button.grid(row=1, column=0, padx=20, sticky='E')
 
 #region PIN PANEL
 pin_panel = tk.Frame(main_window)
-pin_panel.columnconfigure((0, 1, 2, 3), minsize=int((window_width - (2 * cpadx) - 40) / 9))
-pin_panel.columnconfigure((4), minsize=int((window_width - (2 * cpadx) - 40) / 9) * 5)
+pin_panel.columnconfigure((0, 1, 2, 3), minsize=int((WINDOW_WIDTH - (2 * CPADX) - 40) / 9))
+pin_panel.columnconfigure((4), minsize=int((WINDOW_WIDTH - (2 * CPADX) - 40) / 9) * 5)
 
 pin_entry_digit1_var = StringVar()
 pin_entry_digit2_var = StringVar()

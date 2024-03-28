@@ -1,7 +1,7 @@
 
 
-window_width = 500
-window_height = 200
-cpadx = 20
+WINDOW_WIDTH = 500
+WINDOW_HEIGHT = 200
+CPADX = 20
 
 
